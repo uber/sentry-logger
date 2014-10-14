@@ -1,0 +1,71 @@
+{
+  "name": "sentry-logger",
+  "version": "1.0.0",
+  "description": "A Sentry transport for Winston",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": "git://github.com/uber/sentry-logger.git",
+  "keywords": [
+    "winston",
+    "transport",
+    "sentry"
+  ],
+  "author": "David Ellis <d.f.ellis@ieee.org>",
+  "collaborators": [
+    {
+      "name": "David Ellis"
+    },
+    {
+      "name": "Raynos"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/uber/sentry-logger/issues",
+    "email": "raynos2@gmail.com"
+  },
+  "dependencies": {
+    "core-util-is": "^1.0.1",
+    "json-stringify-safe": "~5.0.0",
+    "raven": "^0.6.3",
+    "winston": "~0.7.2",
+    "xtend": "~2.1.2"
+  },
+  "devDependencies": {
+    "body": "^4.4.2",
+    "coveralls": "^2.10.0",
+    "hammock": "^0.1.7",
+    "istanbul": "^0.2.7",
+    "jshint": "^2.5.0",
+    "opn": "^0.1.2",
+    "pre-commit": "0.0.5",
+    "tap-spec": "^0.1.8",
+    "tape": "^2.12.3"
+  },
+  "scripts": {
+    "test": "npm run jshint -s && node test/index.js | tap-spec",
+    "unit-test": "node test/index.js | tap-spec",
+    "jshint-pre-commit": "jshint --verbose $(git diff --cached --name-only | grep '\\.js$')",
+    "jshint": "jshint --verbose $(git ls-files | grep '\\.js$')",
+    "cover": "istanbul cover --report none --print detail test/index.js",
+    "view-cover": "istanbul report html && opn ./coverage/index.html",
+    "travis": "npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)"
+  },
+  "homepage": "https://github.com/uber/sentry-logger",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/uber/sentry-logger/raw/master/LICENSE"
+    }
+  ],
+  "engine": {
+    "node": ">= 0.8.x"
+  },
+  "pre-commit": [
+    "jshint-pre-commit",
+    "unit-test"
+  ],
+  "private": true
+}
