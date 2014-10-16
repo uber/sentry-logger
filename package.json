@@ -66,6 +66,5 @@
   "pre-commit": [
     "jshint-pre-commit",
     "unit-test"
-  ],
-  "private": true
+  ]
 }
