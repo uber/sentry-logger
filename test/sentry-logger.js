@@ -99,7 +99,7 @@ test('SentryLogger makes HTTP requests to a sentry server', function (assert) {
         var uri = req.url;
 
         res.end();
-        assert.equal(uri, '/api/store/');
+        assert.equal(uri, '/api/269/store/');
 
         server.close();
         assert.end();
