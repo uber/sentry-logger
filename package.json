@@ -1,6 +1,6 @@
 {
   "name": "sentry-logger",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "A Sentry transport for Winston",
   "main": "index.js",
   "directories": {
