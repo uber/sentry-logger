@@ -1,5 +1,5 @@
 var test = require('tape');
-var Logger = require('winston').Logger;
+var Logger = require('winston-uber').Logger;
 
 var SentryLogger = require('../');
 

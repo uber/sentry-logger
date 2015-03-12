@@ -1,5 +1,5 @@
 var util = require('util');
-var winston = require('winston');
+var winston = require('winston-uber');
 var raven = require('uber-raven');
 var ravenParsers = require('uber-raven/lib/parsers.js');
 var extend = require('xtend');

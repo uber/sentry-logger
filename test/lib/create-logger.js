@@ -1,4 +1,4 @@
-var Logger = require('winston').Logger;
+var Logger = require('winston-uber').Logger;
 
 var SentryServer = require('./sentry-server.js');
 var SentryLogger = require('../../index.js');
