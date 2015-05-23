@@ -36,6 +36,11 @@ function SentryLogger(options) {
 
     var ravenErrorHandler = typeof options.onRavenError === 'function' ?
         options.onRavenError : function (e) {
+            // do not warn() on 429 errors
+            if (e.message.indexOf('429') >= 0) {
+                return;
+            }
+
             winston.warn('Raven failed to upload to Sentry: ', {
                 message: e.message,
                 stack: e.stack,
