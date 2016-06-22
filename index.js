@@ -72,7 +72,9 @@ SentryLogger.prototype.name = 'SentryLogger';
 SentryLogger.prototype.log = function(level, msg, meta, callback) {
     var thunk;
 
-    meta = meta || {};
+    if (!meta || typeof meta !== 'object') {
+        meta = {};
+    }
     // store original meta because we might serialize it
     var originalMeta = meta;
     var stringMeta = stringify(meta);
@@ -108,7 +110,7 @@ SentryLogger.prototype.log = function(level, msg, meta, callback) {
 
         msg = metaTuple.value;
     }
-    
+
     // if we have a req in the meta object we want to
     // use sentry's HTTP request serializer to pretty print the
     // http Request rather then sending the raw representation
@@ -137,7 +139,7 @@ SentryLogger.prototype.log = function(level, msg, meta, callback) {
             this.captureError(msg, sentryArgs, callback);
         }
     } else {
-        // winston adds in 9 stacks of function calls between the 
+        // winston adds in 9 stacks of function calls between the
         // actual .log() call location
         errLoc = this.computeErrLoc(msg);
 

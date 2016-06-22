@@ -50,6 +50,23 @@ test('SentryLogger can log messages', function (assert) {
     assert.end();
 });
 
+test('SentryLogger handles non-object meta', function (assert) {
+    var messages = [];
+    var logger = new SentryLogger({
+        ravenClient: fakeRavenClient(function (type, msg, meta) {
+            messages.push([type, msg, meta]);
+        })
+    });
+
+    logger.log('error', new Error('oh noes'), 'string meta');
+
+    assert.equal(messages[0][0], 'error');
+    assert.equal(messages[0][1].message, ': oh noes');
+    assert.equal(messages.length, 1);
+
+    assert.end();
+});
+
 test('SentryLogger handles errors differently', function (assert) {
     var messages = [];
     var logger = new SentryLogger({
