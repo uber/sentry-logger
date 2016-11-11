@@ -134,7 +134,7 @@ SentryLogger.prototype.log = function(level, msg, meta, callback) {
 
         if (this.sentryProber) {
             thunk = this.captureError.bind(null, msg, sentryArgs);
-            this.sentryProber.probe(thunk);
+            this.sentryProber.probe(thunk, callback);
         } else {
             this.captureError(msg, sentryArgs, callback);
         }
@@ -150,14 +150,10 @@ SentryLogger.prototype.log = function(level, msg, meta, callback) {
         if (this.sentryProber) {
             thunk = this.captureMessage
                 .bind(null, errLoc + ": " + msg, sentryArgs);
-            this.sentryProber.probe(thunk);
+            this.sentryProber.probe(thunk, callback);
         } else {
             this.captureMessage(errLoc + ": " + msg, sentryArgs, callback);
         }
-    }
-
-    if (this.sentryProber) {
-        callback(null, true);
     }
 };
 
