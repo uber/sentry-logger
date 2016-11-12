@@ -63,7 +63,17 @@ function SentryLogger(options) {
     this.captureMessage = this.ravenClient.captureMessage
         .bind(this.ravenClient);
     this.sentryProber = options.sentryProber || null;
+    this.sentryProberCallbackImmediately = !options.sentryProberDetectFailuresBy;
+    this.sentryProberDetectFailuresByCallback = options.sentryProberDetectFailuresBy === SentryLogger.detectBy.CALLBACK;
+    this.sentryProberDetectFailuresByEvent = options.sentryProberDetectFailuresBy === SentryLogger.detectBy.EVENT;
+    this.sentryProberDetectFailuresByEventSuccessEvent = options.sentryProberDetectFailuresByEventSuccessEvent;
+    this.sentryProberDetectFailuresByEventFailureEvent = options.sentryProberDetectFailuresByEventFailureEvent;
 }
+
+SentryLogger.detectBy = {
+    CALLBACK: 'callback',
+    EVENT: 'event'
+};
 
 util.inherits(SentryLogger, winston.Transport);
 
@@ -128,13 +138,28 @@ SentryLogger.prototype.log = function(level, msg, meta, callback) {
 
     var errLoc;
 
+    if(this.sentryProber && this.sentryProberDetectFailuresByEvent) {
+        this.ravenClient.once(
+            this.sentryProberDetectFailuresByEventFailureEvent || 'error',
+            function onProberFailure(err) {
+                callback(err || new Error('Sentry Prober emitted failure event.'));
+            }
+        );
+        this.ravenClient.once(
+            this.sentryProberDetectFailuresByEventSuccessEvent || 'logged',
+            function onProberSuccess(message) {
+                callback(null, message || true);
+            }
+        );
+    }
+
     if (isError(msg)) {
         errLoc = this.computeErrLoc(msg.message);
         msg.message = errLoc + ": " + msg.message;
 
         if (this.sentryProber) {
             thunk = this.captureError.bind(null, msg, sentryArgs);
-            this.sentryProber.probe(thunk);
+            this.sentryProber.probe(thunk, this.sentryProberDetectFailuresByCallback ? callback : null);
         } else {
             this.captureError(msg, sentryArgs, callback);
         }
@@ -150,13 +175,13 @@ SentryLogger.prototype.log = function(level, msg, meta, callback) {
         if (this.sentryProber) {
             thunk = this.captureMessage
                 .bind(null, errLoc + ": " + msg, sentryArgs);
-            this.sentryProber.probe(thunk);
+            this.sentryProber.probe(thunk, this.sentryProberDetectFailuresByCallback ? callback : null);
         } else {
             this.captureMessage(errLoc + ": " + msg, sentryArgs, callback);
         }
     }
 
-    if (this.sentryProber) {
+    if (this.sentryProber && this.sentryProberCallbackImmediately) {
         callback(null, true);
     }
 };
