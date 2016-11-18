@@ -139,9 +139,15 @@ SentryLogger.prototype.log = function(level, msg, meta, callback) {
     var errLoc;
 
     if(this.sentryProber && this.sentryProberDetectFailuresByEvent) {
+        var proberSignaled = false;
         this.ravenClient.once(
             this.sentryProberDetectFailuresByEventFailureEvent || 'error',
             function onProberFailure() {
+                if (proberSignaled) {
+                    return;
+                }
+                proberSignaled = true;
+
                 // We swallow this and callback with a success case
                 // because sentry failures are warned by ravenErrorHandler instead.
                 // Theoretically this is "incorrect" wrt the "detectFailuresByEvent" api,
@@ -154,6 +160,11 @@ SentryLogger.prototype.log = function(level, msg, meta, callback) {
         this.ravenClient.once(
             this.sentryProberDetectFailuresByEventSuccessEvent || 'logged',
             function onProberSuccess(message) {
+                if (proberSignaled) {
+                    return;
+                }
+                proberSignaled = true;
+
                 callback(null, message || true);
             }
         );
