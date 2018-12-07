@@ -1,6 +1,6 @@
 # winston-sentry
 
-A [sentry]() transport for [winston]()
+A [sentry](https://sentry.io/) transport for [winston](https://github.com/winstonjs/winston).
 
 ## Usage
 
