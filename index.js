@@ -96,6 +96,7 @@ SentryLogger.prototype.log = function(level, msg, meta, callback) {
         JSON.parse(stringMeta) : meta;
 
     var sentryArgs = {
+        level: level
         extra: meta,
         tags: extend(this.defaultTags, meta.tags || {})
     };
