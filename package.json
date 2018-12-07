@@ -29,7 +29,7 @@
   "dependencies": {
     "core-util-is": "^1.0.1",
     "json-stringify-safe": "~5.0.0",
-    "uber-raven": "^0.6.3-project-name",
+    "raven": "^2.3.0",
     "winston-uber": "^1.0.0",
     "xtend": "^4.0.0"
   },
